@@ -1,7 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 // Is the current build a development build
 const IS_DEV = (process.env.NODE_ENV === 'dev');
@@ -9,7 +8,7 @@ const IS_DEV = (process.env.NODE_ENV === 'dev');
 const dirNode = 'node_modules';
 const dirApp = path.join(__dirname, 'app');
 const dirAssets = path.join(__dirname, 'assets');
-
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const appHtmlTitle = 'Webpack Boilerplate';
 
 const extractSass = new ExtractTextPlugin({
@@ -17,9 +16,9 @@ const extractSass = new ExtractTextPlugin({
 });
 
 const paths = {
-    DIST: path.resolve(__dirname, 'dist'),
-    SRC: path.resolve(__dirname, 'app'),
-    JS: path.resolve(__dirname, 'app/js')
+    DIST: path.join(__dirname, 'dist'),
+    SRC: path.join(__dirname, 'app'),
+    JS: path.join(__dirname, 'app/js')
 };
 /**
  * Webpack Configuration
@@ -30,6 +29,13 @@ module.exports = {
     output: {
         path: paths.DIST,
         filename: 'app.bundle.js'
+    },
+    devServer: {
+      // contentBase: paths.DIST,
+      // port: 9001,
+      compress: true,
+      hot: true,
+      open: true
     },
     // entry: {
     //     vendor: [
@@ -54,7 +60,8 @@ module.exports = {
             // lodash
             '_': 'lodash'
         }),
-        extractLess,
+        // new ExtractTextPlugin({filename: 'style.bundle.css', allChunks: true}),
+        extractSass,
         new HtmlWebpackPlugin({
             // template: path.join(__dirname, 'index.ejs'),
             template: path.join(paths.SRC, 'index.html'),
@@ -66,7 +73,14 @@ module.exports = {
             {
                 test: /\.(js|jsx)$/,
                 exclude: /node_modules/,
-                use: ['babel-loader']
+                // use: ['babel-loader']
+                use: {
+                    loader: 'babel-loader',
+                    options: {
+                      cacheDirectory: true,
+                      presets: ['react', 'env']
+                    }
+                }
             },
             // BABEL
             {
@@ -82,6 +96,21 @@ module.exports = {
                 use: ['file-loader']
             },
             // STYLES
+            // {
+            //     test: /\.scss$/,
+            //     use: ['css-hot-loader'].concat(ExtractTextPlugin.extract({
+            //             use: [
+            //                 {
+            //                     loader: "css-loader" // translates CSS into CommonJS
+            //                 },
+            //                 {
+            //                     loader: "sass-loader" // compiles Sass to CSS
+            //                 }
+            //             ],
+            //             fallback: "style-loader" // used when css not extracted
+            //         }
+            //     ))
+            // },
             {
                 test: /\.css$/,
                 use: [
@@ -115,16 +144,16 @@ module.exports = {
                     }
                 ]
             },
-            {
-                test: /\.scss$/,
-                use: extractSass.extract({
-                    use: [
-                        "css-loader",
-                        "sass-loader"
-                    ],
-                    fallback: "style-loader"
-                })
-            }
+            // {
+            //     test: /\.scss$/,
+            //     use: extractSass.extract({
+            //         use: [
+            //             "css-loader",
+            //             "sass-loader"
+            //         ],
+            //         fallback: "style-loader"
+            //     })
+            // },
 
             // EJS
             {

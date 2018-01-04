@@ -18,7 +18,7 @@ const extractSass = new ExtractTextPlugin({
 const paths = {
     DIST: path.join(__dirname, 'dist'),
     SRC: path.join(__dirname, 'app'),
-    JS: path.join(__dirname, 'app/js')
+    JS: path.join(__dirname, 'app/src')
 };
 /**
  * Webpack Configuration
@@ -63,8 +63,8 @@ module.exports = {
         // new ExtractTextPlugin({filename: 'style.bundle.css', allChunks: true}),
         extractSass,
         new HtmlWebpackPlugin({
-            // template: path.join(__dirname, 'index.ejs'),
-            template: path.join(paths.SRC, 'index.html'),
+            template: path.join(paths.SRC, 'index.ejs'),
+            // template: path.join(paths.SRC, 'index.html'),
             title: appHtmlTitle
         })
     ],

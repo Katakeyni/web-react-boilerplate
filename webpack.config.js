@@ -28,12 +28,18 @@ module.exports = {
     entry: path.join(paths.JS, 'index.js'),
     output: {
         path: paths.DIST,
-        filename: 'app.bundle.js'
+        filename: 'app.bundle.js',
+        publicPath: '/',
+        crossOriginLoading: "anonymous"
     },
+    // externals: {
+    //     axios: "axios"
+    // },
     devServer: {
       // contentBase: paths.DIST,
       // port: 9001,
       compress: true,
+      historyApiFallback: true,
       hot: true,
       open: true
     },
@@ -63,8 +69,8 @@ module.exports = {
         // new ExtractTextPlugin({filename: 'style.bundle.css', allChunks: true}),
         extractSass,
         new HtmlWebpackPlugin({
-            template: path.join(paths.SRC, 'index.ejs'),
             // template: path.join(paths.SRC, 'index.html'),
+            template: path.join(paths.SRC, 'index.html'),
             title: appHtmlTitle
         })
     ],
@@ -78,9 +84,14 @@ module.exports = {
                     loader: 'babel-loader',
                     options: {
                       cacheDirectory: true,
-                      presets: ['react', 'env']
+                      presets: ['react', 'env', "stage-2"]
                     }
                 }
+            },
+            {
+                test: /\.json?$/,
+                exclude: /(node_modules)/,
+                loader: 'json'
             },
             // BABEL
             {

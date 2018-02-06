@@ -1,39 +1,27 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import 'assets/styles/index.scss';
-
 import { connect, Provider } from 'react-redux';
-
-import { ConnectedRouter, routerReducer, routerMiddleware } from 'react-router-redux';
-
-import { createStore, applyMiddleware } from 'redux';
+import { ConnectedRouter } from 'react-router-redux';
 import createHistory from 'history/createBrowserHistory';
 
 
+import 'assets/styles/index.scss';
+
 import Index from './pages/Index';
 import AppContainer from "./AppContainer";
+import store from "./store";
 
 const history = createHistory();
 
-const store = createStore(
-  routerReducer,
-  applyMiddleware(routerMiddleware(history)),
-);
 
 
 const mapStateToProps = state => ({
   location: state.location,
+  {...state}
 })
 
-const mapDispatchToProps = (dispatch)=>{
-	return {
-		onNewCommandeClick: ()=>{
-			dispatch(openCommandeForm())
-		}
-	}
-}
 
-const App = connect()(AppContainer)
+const App = connect(mapStateToProps)(AppContainer)
 
 ReactDOM.render(
   <Provider store={store}>

@@ -17,7 +17,7 @@ const history = createHistory();
 
 const mapStateToProps = state => ({
   location: state.location,
-  {...state}
+  ...state
 })
 
 

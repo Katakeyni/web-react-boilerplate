@@ -1,4 +1,4 @@
-import logger from 'redux-logger'
+import { createLogger }  from 'redux-logger'
 import thunk from "redux-thunk";
 import promise from "redux-promise-middleware";
 import { createStore, applyMiddleware } from 'redux';
@@ -10,7 +10,7 @@ const history = createHistory();
 
 const store = createStore(
   routerReducer,
-  applyMiddleware(routerMiddleware(history), promise(), thunk, logger()),
+  applyMiddleware(routerMiddleware(history), promise(), thunk, createLogger()),
 );
 
 export default store;
